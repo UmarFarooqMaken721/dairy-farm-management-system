@@ -31,7 +31,11 @@ const connectDB = async () => {
     isConnected = true;
     return;
   }
-  const mongoUri = process.env.MONGO_URI || 'mongodb+srv://dairyAdmin:dairy123@cluster0.aepz8b8.mongodb.net/dairyfarm?retryWrites=true&w=majority&appName=Cluster0';
+  const mongoUri = process.env.MONGO_URI;
+  if (!mongoUri) {
+    console.warn('⚠️ MONGO_URI is not set in environment variables');
+    return;
+  }
   await mongoose.connect(mongoUri);
   isConnected = true;
 };

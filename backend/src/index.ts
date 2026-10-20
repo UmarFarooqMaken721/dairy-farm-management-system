@@ -46,10 +46,14 @@ if (fs.existsSync(frontendDistPath)) {
   });
 }
 
-const mongoUri = process.env.MONGO_URI || 'mongodb+srv://dairyAdmin:dairy123@cluster0.aepz8b8.mongodb.net/dairyfarm?retryWrites=true&w=majority&appName=Cluster0';
-mongoose.connect(mongoUri)
-  .then(() => console.log('✅ MongoDB connected'))
-  .catch((err) => console.log('❌ DB Error:', err));
+const mongoUri = process.env.MONGO_URI;
+if (mongoUri) {
+  mongoose.connect(mongoUri)
+    .then(() => console.log('✅ MongoDB connected'))
+    .catch((err) => console.log('❌ DB Error:', err));
+} else {
+  console.warn('⚠️ MONGO_URI is not defined in environment variables');
+}
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`🚀 Server on port ${PORT}`));
