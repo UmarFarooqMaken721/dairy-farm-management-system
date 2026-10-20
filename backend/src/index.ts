@@ -4,6 +4,8 @@ import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import path from 'path';
+import fs from 'fs';
 import authRoutes from './routes/authRoutes';
 import animalRoutes from './routes/animalRoutes';
 import milkRoutes from './routes/milkRoutes';
@@ -33,6 +35,16 @@ app.use('/api/reports', reportRoutes);
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date() });
 });
+
+// Serve frontend static build if available
+const frontendDistPath = path.resolve(__dirname, '../../frontend/dist');
+if (fs.existsSync(frontendDistPath)) {
+  app.use(express.static(frontendDistPath));
+  app.use((req, res, next) => {
+    if (req.path.startsWith('/api')) return next();
+    res.sendFile(path.join(frontendDistPath, 'index.html'));
+  });
+}
 
 mongoose.connect(process.env.MONGO_URI as string)
   .then(() => console.log('✅ MongoDB connected'))
