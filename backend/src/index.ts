@@ -1,5 +1,11 @@
 import dns from 'dns';
-dns.setServers(['8.8.8.8', '1.1.1.1']);
+if (process.platform === 'win32') {
+  try {
+    dns.setServers(['8.8.8.8', '1.1.1.1']);
+  } catch (e) {
+    // Ignore DNS error
+  }
+}
 import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
