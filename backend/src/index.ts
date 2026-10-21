@@ -64,4 +64,8 @@ mongoose.connect(mongoUri)
   .catch((err) => console.log('❌ DB Error:', err));
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`🚀 Server on port ${PORT}`));
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => console.log(`🚀 Server on port ${PORT}`));
+}
+
+export default app;
