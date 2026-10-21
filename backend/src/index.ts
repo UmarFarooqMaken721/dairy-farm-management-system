@@ -27,18 +27,23 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Routes
-app.use('/api/auth', authRoutes);
-app.use('/api/animals', animalRoutes);
-app.use('/api/milk', milkRoutes);
-app.use('/api/expenses', expenseRoutes);
-app.use('/api/customers', customerRoutes);
-app.use('/api/orders', orderRoutes);
-app.use('/api/payments', paymentRoutes);
-app.use('/api/sales', saleRoutes);
-app.use('/api/reports', reportRoutes);
+// Routes - support both /api and root prefix for Vercel Services
+const registerRoutes = (prefix: string) => {
+  app.use(`${prefix}/auth`, authRoutes);
+  app.use(`${prefix}/animals`, animalRoutes);
+  app.use(`${prefix}/milk`, milkRoutes);
+  app.use(`${prefix}/expenses`, expenseRoutes);
+  app.use(`${prefix}/customers`, customerRoutes);
+  app.use(`${prefix}/orders`, orderRoutes);
+  app.use(`${prefix}/payments`, paymentRoutes);
+  app.use(`${prefix}/sales`, saleRoutes);
+  app.use(`${prefix}/reports`, reportRoutes);
+};
 
-app.get('/api/health', (req, res) => {
+registerRoutes('/api');
+registerRoutes('');
+
+app.get(['/api/health', '/health'], (req, res) => {
   res.json({ status: 'ok', timestamp: new Date() });
 });
 
