@@ -964,6 +964,12 @@ app.use(async (req, res, next) => {
     });
   }
 });
+app.use((req, res, next) => {
+  if (!req.url.startsWith('/api')) {
+    req.url = '/api' + (req.url.startsWith('/') ? req.url : '/' + req.url);
+  }
+  next();
+});
 app.use("/api/auth", authRoutes_default);
 app.use("/api/animals", animalRoutes_default);
 app.use("/api/milk", milkRoutes_default);
